@@ -439,7 +439,7 @@ export function calculatePortfolioSummary(
 }
 
 // Helper to calculate allocation by a key
-function calculateAllocationByKey<T extends Record<string, unknown>>(
+function calculateAllocationByKey<T extends { valueUsd: number }>(
   items: T[],
   key: keyof T,
   total: number
@@ -447,8 +447,8 @@ function calculateAllocationByKey<T extends Record<string, unknown>>(
   const allocation: Record<string, { value: number; percentage: Percentage }> = {};
   
   items.forEach(item => {
-    const keyValue = String(item[key]);
-    const value = (item as unknown as { valueUsd: number }).valueUsd || 0;
+    const keyValue = String((item as Record<string, unknown>)[key as string]);
+    const value = item.valueUsd || 0;
     
     if (!allocation[keyValue]) {
       allocation[keyValue] = { value: 0, percentage: 0 };
